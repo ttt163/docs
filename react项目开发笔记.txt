@@ -1,0 +1,458 @@
+﻿react
+babel
+react-router
+flux (actions,components,constants,dispatcher,stores)
+readux(actions,components,constants,containers,reducers,stores)
+gulp
+webpack
+
+
+
+安装：
+
+安装webpack
+npm install webpack --save-dev
+服务器
+npm install webpack-dev-server --save-dev
+
+配置webpack-dev-server代理  // 假定在本机他是类似http://localhost:5000/api/*这类的请求
+
+devServer: {
+
+        hot: true,
+
+        inline: true,
+
+        //其实很简单的，只要配置这个参数就可以了
+
+        proxy: {
+
+          '/api/*': {
+
+              target: 'http://localhost:5000',
+
+              secure: false
+
+          }
+
+        }
+
+    },
+
+插件，自动生成html
+npm install html-webpack-plugin --save-dev
+
+安装我们的loader
+npm install css-loader style-loader --save-dev
+
+sass编程   注：之前没安装过sass，要先安装node-sass npm install node-sass@latest(注：之前没安装过sass需要node-sass环境),再安装sass-loader  
+npm install sass-loader --save-dev
+  //npm install css-loader style-loader sass-loader node-sass --save-dev
+对应webpack的module
+{
+        test: /\.scss$/,
+        loaders: ['style', 'css', 'sass'],
+        include: APP_PATH
+      },
+
+
+images
+
+可以通过url-loader把较小的图片转换成base64的字符串内嵌在生成的文件里。安装：
+
+npm install url-loader --save -dev
+config配置:
+{ test:/\.png$/,loader:'url-loader?limit=10000'}//限制大小小于10k的
+css
+ background:url(images/logo-201305.png);
+    /*生成完图片会被处理成base64的字符串 注意：不要写'/images/logo-201305.png',否则图片不被处理*/
+iconfont
+
+内嵌iconfont的使用方法其实和上述处理png图片的方法一致。通过url-loader来处理。
+  { test:/\.(png|woff|svg|ttf|eot)$/,loader:'url-loader?limit=10000'}//限制大小小于10k的
+
+安装jshint,检查代码
+
+npm install jshint --save-dev
+npm install jshint-loader --save-dev
+
+在config文件中配置
+
+
+module: {
+
+...
+    //和loaders一样的语法，很简单
+
+    perLoaders: [
+
+        {
+
+            test: /\.jsx?$/,
+
+            include: APP_PATH,
+
+            loader: 'jshint-loader'
+
+        }
+
+    ]
+}
+
+
+...
+//配置jshint的选项，支持es6的校验
+
+jshint: {
+  "esnext": true
+},
+
+
+
+
+
+
+
+
+安装es6转化
+
+npm install babel-loader --save-dev
+
+npm install babel-preset-es2015  babel-preset-react --save-dev
+
+让样式好看点，添加一个Bootstrap 4
+
+npm install bootstrap@4.0.0-alpha.2 --save-dev
+
+
+为了处理scss 需要添加sass loader
+npm install css-loader style-loader sass-loader node-sass --save-dev
+
+添加React Transform支持
+
+npm install --save-dev babel-plugin-react-transform
+如果想实现Hot Module Replacement (说白了就是页面不刷新，直接替换修改的Component)，再安装一个transform
+npm install --save-dev react-transform-hmr
+如果我们还要再来一个在页面上直接显示catch到的错误的transform，（不想打开console看到底有啥错误，直接显示在页面上多好），简单！再安装一个transform:
+npm install --save-dev react-transform-catch-errors redbox-react
+要让新建的两个transform生效,只需再安装一个present。
+npm install babel-preset-react-hmre --save-dev
+安装完毕，将支持HMR和Catch Error的present添加到.babelrc
+
+{
+  "presets": ["react", "es2015"],
+  //在开发的时候才启用HMR和Catch Error，打包时要去掉下面的代码
+  "env": {
+   "development": {
+     "presets": ["react-hmre"]
+   }
+  }
+}
+
+Object.assign() 新建了一个副本,你必须把第一个参数设置为空对象,因为它会改变第一个参数的值
+                如：Object.assign({}, state, {
+                          visibilityFilter: action.filter
+                        })
+
+获取key,value,用Object.entries
+for(var [k,v] of Object.entries(data)){
+        if(k==val){
+            dataVal=v;
+
+            break;
+        }
+    }
+
+数组去重：
+[...new Set(array)]或Array.from(new Set(array)) //set可以去掉重复的值
+
+React
+
+安装React和React-Dom
+npm install react react-dom --save
+
+1,cass：用className
+2,style写法：style={{textAlign:"center",color:'red'}}
+3，获取dom：
+        this.ref.xx   //获取虚拟的dom
+        ReactDOM.findDOMNode(this.refs.xx)) //获取真实的dom
+        注：之前的写法是 React.findDOMNode，现在findDOMNode放在ReactDom中，所以要import ReactDOM  from 'react-dom'
+
+4，生命周期：
+        在组件挂载后（componentDidMount）阶段：可以对jquery插件进行初始化，如：$(ReactDOM.findDOMNode(this.refs.alertModal)).modal()
+        在组件卸载前(componentWillUnmount)：可以对插件进行卸载
+        componentWillReceiveProps（nextProps）：当props发生变化时执行
+
+5,绑定方法要绑定this：如：onClick={this._login.bind(this)}或
+
+6，设置state： es6下
+//初始化state
+ constructor(state) {
+        super(state);
+        this.state = {
+            submitted: false
+        }
+    }
+//设置state
+this.setState({submitted:true})
+
+
+
+react-router
+npm install -S react-router
+路由嵌套
+ <Route path="/" component={App}>
+        <Route path="/about(/:id)" component={About}/>
+  </Route>
+  App组建加上{this.props.children}
+  路由参数： path="/about(/:id)"
+  获取路由参数：{this.props.params.id}  //id是参数名
+  查询字符串:/foo?bar=baz  可以用this.props.location.query.bar获取
+
+  IndexRoute:根路由组建，默认显示页index.html
+
+Redirect:用于路由的跳转，即用户访问一个路由，会自动跳转到另一个路由。
+  {/* 从 /inbox/messages/:id 跳转到 /messages/:id */}
+  ＜Redirect from="/inbox/messages/:id" to="/messages/:id" />
+
+IndexRedirect:用于访问根路由的时候，将用户重定向到某个子组件。
+<Route path="/" component={App}>
+  ＜IndexRedirect to="/welcome" />
+  <Route path="welcome" component={Welcome} />
+  <Route path="about" component={About} />
+</Route>
+
+Link:用于取代<a>元素，生成一个链接，允许用户点击后跳转到另一个路由
+<Link to="/about">About</Link>
+注：如果链接到根路由/，不要使用Link组件，而要使用IndexLink组件。
+因为/会匹配任何子路由，activeStyle和activeClassName会失效
+<IndexLink to="/" activeClassName="active">
+  Home
+</IndexLink>
+另一种方法是使用Link组件的onlyActiveOnIndex属性，也能达到同样效果。
+<Link to="/" activeClassName="active" onlyActiveOnIndex={true}>
+  Home
+</Link>
+
+histroy 属性
+browserHistory:显示正常的路径example.com/some/path，背后调用的是浏览器的History API
+                但是，这种情况需要对服务器改造。否则用户直接向服务器请求某个子路由，会显示网页找不到的404错误。
+               如果开发服务器使用的是webpack-dev-server, --history-api-fallback
+                浏览器地址形式：example.com/about?id=asas
+               链接形式：to="/about?id=asas"
+                获取参数形式：{this.props.location.query.id}
+
+hashHistory:路由将通过URL的hash部分（#）切换，URL的形式类似example.com/#/some/path
+            参数路由配置：  <Route path="/about(/:id)" component={About}/>
+            浏览器地址形式：example.com/#/about/asas
+            链接形式：to="/about/asas"
+            获取参数形式： {this.props.params.id}
+createMemoryHistory
+
+表单处理：
+第一种方法是使用browserHistory.push
+import { browserHistory } from 'react-router'
+// ...
+  handleSubmit(event) {
+    event.preventDefault()
+    const userName = event.target.elements[0].value
+    const path = `/repos/${userName}/${repo}`
+    browserHistory.push(path)
+  },
+
+第二种方法是使用context对象。
+ contextTypes: {
+    router: React.PropTypes.object
+  },
+  handleSubmit(event) {
+    // ...
+    this.context.router.push(path)
+  },
+
+安装redux
+npm install --save redux
+npm install --save react-redux
+npm install --save-dev redux-devtools
+
+action ：
+action创建函数：返回含有type的action对象，可以在任地方何调用store.dispatch(action)
+                如：
+                export function addTodo(text) {
+                  return { type: ADD_TODO, text }
+                }
+reducer： switch判断action.type
+ combineReducers() 将多个 reducer 合并成为一个
+
+store:
+createStore():第一个参数为合并的reducer，第二个参数是可选的，用于设置state初始状态
+store = createStore(todoApp)
+
+connect:绑定state和dispatch到props上面，可以通过this.props.dispatch调用
+    第一个参数，必须是function，作用是绑定state的指定值到props上面
+    第二个参数，可以是function，也可以是对象，作用是绑定action到props上,必须使用dispatch触发action。
+    返回值，是绑定后的组件
+    如：export default connect(select)(App)
+
+provider将store作为context往子节点进行传递
+
+redux中间件：applyMiddleware
+//导入
+import { applyMiddleware, createStore } from 'redux';
+//使用
+const store = createStore(
+  reducer,
+  applyMiddleware(thunk, promise, logger)  //3个参数就是中间件，有次序要求，如logger必须放在最后
+);
+thunk:异步多个action,渲染一次页面
+    如：export function incrementAsync(action) {
+          return dispatch => {
+              dispatch(addData({"ccc":"111"}));
+              setTimeout(() => {
+                  // Yay! Can invoke sync or async actions with `dispatch`
+                  dispatch(action);
+              }, 1000);
+              dispatch(addData({"bbb":"222"}));
+          };
+      }
+
+注：
+1, Reducer 中更新 State :
+     [...mystuff, {name: 'js lovin fool']` //不要用push
+
+2,如果更新的是 Object
+     let counters = {
+         faves: 0,
+         forward: 20,
+     }
+     counters = {...counters, faves: counters.faves + 1}
+ 而不是:
+     counters.faves = counters.faves + 1}
+
+文件夹：
+containers：容器组件，放components组件的组合
+components：展示组件
+
+store = createStore(todoApp)-->store.dispatch(action)
+
+
+
+安装第三方插件
+npm install jquery --save
+npm install bootstrap --save
+(注：bootstrap v4的tooltips依赖Tether，需要npm install tether --save-dev，webpack.config需要配置{ test: /tether\.js$/, loader: "expose?Tether" },最后在import bootstrap之前import 'tether')
+
+安装 expose-loader，解决插件依赖问题（如，bootstrap依赖jquery）
+npm install expose-loader --save-dev
+module.exports = {
+    loaders: [{
+        // 得到jquery模块的绝对路径
+        test: require.resolve('jquery'),
+        // 将jquery绑定为window.jQuery 和 window.$
+        loader: 'expose?jQuery!expose?$'
+    }]
+};
+
+
+JSON数据范式化（normalizr）
+安装 npm install --save normalizr
+arrayOf和valueOf的区别
+数组用arrayOf，如：
+         数组：   input = [{
+                      id: 1,
+                      type: 'articles',
+                      title: 'Some Article'
+                    }, {
+                      id: 1,
+                      type: 'tutorials',
+                      title: 'Some Tutorial'
+                    }];
+对象用valueOf，如：
+    对象：    input = {
+                  one: {
+                    id: 1,
+                    type: 'articles',
+                    title: 'Some Article'
+                  },
+                  two: {
+                    id: 2,
+                    type: 'articles',
+                    title: 'Another Article'
+                  },
+                  three: {
+                    id: 1,
+                    type: 'tutorials',
+                    title: 'Some Tutorial'
+                  }
+                };
+
+
+
+
+ant :
+安装：npm install antd --save
+
+
+
+
+
+
+package.json 中的 包/库 部分说明
+
+babel-core babel6 的基础模块
+
+babel-eslint ESLint 是前端JS代码检测利器。而 babel-eslint 则允许你检测所有的 Babel 代码。
+
+babel-loader 这个包允许你使用 Babel 和 webpack 转译（Transpiling） JavaScript 文件。
+
+babel-plugin-react-transform 这个插件通过任意转换的方式去封装 React 组件。换句话说，你可以随心所欲的摆弄你的组件了。
+
+babel-plugin-transform-runtime 在 Babel 转换过程中，详细的展示引用的相关辅助工具和内置命令，并自动的聚合填充你的代码而不会污染全局。
+
+babel-preset-es2015 此预设包含了所有的 es2015 插件。
+
+babel-preset-react 此预设包含了所有的 React 插件。
+
+babel-preset-stage-0 此预设包含了 stage 0 中的所有插件。
+
+eslint JavaScript 语法检测利器：分析出你代码潜在的错误和非标准用法。
+
+eslint-plugin-react ESLint 中关于 React 语法检测的插件。
+
+react-transform-hmr 一个 React 转换装置，该装置通过引用 Hot Module Replacement API 使热重载 React 的类成为可能。
+
+react-transform-catch-errors 呈现你 React 组件的错误信息。
+
+webpack-dev-server 为 wepack app 提供一个服务器，如果你的代码有任何变化，浏览器将自动刷新显示，极大的方便前期开发。
+
+babel-runtime Babel 自带的运行环境。
+
+另外，我增加了style-loader，css-loader，less，less-loader这四个包用于加载.less文件模块。（注意，less-loader与less必须同时存在才能正常工作。）
+
+
+部署上线
+
+刚才说的各种情况都是在开发时候的情况，那么假如项目已经开发完了，需要部署上线了。我们应该新创建一个单独的config文件，因为部署上线使用webpack的时候我们不需要一些dev-tools,dev-server和jshint校验等。
+
+复制我们现有的config文件，命名为 webpack.production.config.js，将里面关于 devServer等和开发有关的东西删掉。
+
+在package.json中添加一个命令。
+
+  "scripts": {
+    "start": "webpack-dev-server --hot --inline",
+    "build": "webpack --progress --profile --colors --config webpack.production.config.js"
+  },
+
+  当要上线的时候,运行  npm run build
+
+
+总结：
+1，当函数有参数时，但又必须绑定event时，event放在最后
+
+2,用一个变量对象替换一个对象的键值对用{...thisIpInfo,..._data}形式，_data是一个变量对象，替换thisIpInfo的一个键值对
+
+
+
+
+
+
+

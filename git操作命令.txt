@@ -1,0 +1,40 @@
+1、Push rejected
+Push was rejected, and update failed with error.
+（1） 你的电脑不是安装了 git吗
+（2）找到项目的根目录，例如：D:\phpworkspace\log_manage
+（3）git commit -m "信息"
+提交到本地仓库
+
+（4）然后再 git push origin master
+提交到远程仓库
+（5）git add *
+添加文件
+（6）git pull
+（7）git checkout -- FuduApps/Common/*
+
+
+fatal: pathspec 'tantingting' did not match any files（git没有这个文件，直接删除即可）
+（2）删除文件后，执行$ git status
+2、接下来就是正常的提交操作了
+（2）$ git add . 
+（3）$ git commit -m "clear"
+（4）$ git push origin master
+
+git "Could not read from remote repository.Please make sure you have the correct access rights."解决方案
+2、生成一个公钥（把公钥添加到git服务器）
+（1）打开git的命令行（Git Bash）
+（2）输入ssh-keygen -t rsa -C "username" (注：username为你git上的用户名)
+（3）按三次回车键
+（4）查看公钥cat /c/User/Administrator/.ssh/id_rsa.pub(上面会返回)，ssh-rsa后面就是公钥
+（5）添加公钥到项目上面 Profile settings->SSH and GPG keys->Add SSH Key，将 ssh-rsa ...添加到key中，提交就可以git clone
+
+
+
+
+2、怎么把git的项目复制到本地计算机
+（1）装好git软件
+（2）到D:\phpworkspace目录下，右击Git Bash
+（4）输入git clone git@github.com:ttt163/docs.git
+git clone 用户名@服务器域名（或IP）:/git项目的地址，
+此项功能的前提条件：加公钥
+
